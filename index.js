@@ -18,7 +18,7 @@ app.use(morgan('combined'));
 mongoose.connect('mongodb://127.0.0.1:27017/shopping',{useNewUrlParser: true});
 
 const userSchema = new mongoose.Schema({
-        username: String, 
+        userName: String, 
         password: String, 
         firstName: String, 
         lastName: String 
@@ -36,17 +36,17 @@ app.get('/api/users', (req, res) => {
     })
 });
 
-// curl -X POST http://localhost:3000/api/register -d "{\"username\":\"NZ\",\"firstName\":\"Nizo\",\"lastName\":\"Ahmed\",\"password\":\"pwd\"}" -H "Content-Type: application/json"
+// curl -X POST http://localhost:3000/api/register -d "{\"userName\":\"NZ\",\"firstName\":\"Nizo\",\"lastName\":\"Ahmed\",\"password\":\"pwd\"}" -H "Content-Type: application/json"
 app.post('/api/register', function (req, res, next) {
     let BCRYPT_SALT_ROUNDS = 12;
-    let username =  req.body.username;
+    let userName =  req.body.userName;
     let firstName = req.body.firstName;
     let lastName = req.body.lastName;
     let password = req.body.password;
     
     bcrypt.hash(password, BCRYPT_SALT_ROUNDS).then(function(hashedPassword) {
     var user = new User({
-        username:username,
+        userName:userName,
         password:hashedPassword,
         firstName:firstName,
         lastName:lastName
@@ -59,12 +59,12 @@ app.post('/api/register', function (req, res, next) {
 });
 
 
-// curl -X POST http://localhost:3000/api/login -d "{\"username\":\"NZ\",\"password\":\"pwd\"}" -H "Content-Type: application/json"
+// curl -X POST http://localhost:3000/api/login -d "{\"userName\":\"NZ\",\"password\":\"pwd\"}" -H "Content-Type: application/json"
 app.post('/api/login', async function (req, res) {
-    var username = req.body.username;
+    var userName = req.body.userName;
     var password = req.body.password;
     try{
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ userName });
 
         if (user) {
             bcrypt.compare(password, user.password, function (err, result) {
